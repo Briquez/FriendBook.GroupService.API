@@ -1,3 +1,8 @@
+using FriendBook.GroupService.API.Domain;
+using Hangfire;
+using NodaTime;
+using NodaTime.Serialization.JsonNet;
+using NodaTime.Serialization.SystemTextJson;
 
 namespace FriendBook.GroupService.API
 {
@@ -7,28 +12,45 @@ namespace FriendBook.GroupService.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Services.AddSingleton(builder.Configuration);
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.AddMongoDB();
+            builder.AddPostgresDB();
+
+            builder.AddRepositores();
+            builder.AddValidators();
+            builder.AddServices();
+
+            builder.AddGrpc();
+            builder.AddAuth();
+            builder.AddHangfire();
+            builder.AddHostedServices();
+            
+            builder.Services.AddControllers()
+            .AddJsonOptions(o =>
+            {
+                o.JsonSerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+                o.JsonSerializerOptions.Converters.Add(new BsonIdConverter());
+            });
+
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.AddSwagger();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            app.AddCorsUI();
 
             app.UseAuthorization();
 
-
             app.MapControllers();
+
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions());
 
             app.Run();
         }

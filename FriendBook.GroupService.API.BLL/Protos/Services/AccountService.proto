@@ -1,0 +1,46 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "FriendBook.GroupService.API.BLL.gRPCClients.AccountClient";
+import "Protos/Google/API/annotations.proto";
+
+package AccountService;
+
+service PublicAccount
+{
+  rpc CheckUserExists (RequestUserId) returns (ResponseUserExists){
+  option (google.api.http) =
+   {
+    get: "/IdentityServer/v1/GrpcAccountService/CheckUserExists"
+   };
+  }
+  rpc GetUsersLoginById (RequestUsersId) returns (ResponseUsers){
+  option (google.api.http) =
+   {
+    get: "/IdentityServer/v1/GrpcAccountService/GetUsersLoginById"
+   };
+  }
+}
+
+message RequestUserId
+{
+  string AccountId = 1;
+}
+message ResponseUserExists
+{
+  bool Exists = 1;
+}
+
+message RequestUsersId
+{
+  repeated string UserId = 1;
+}
+
+message User
+{
+  string Id = 1;
+  string Login = 2;
+}
+message ResponseUsers {
+  repeated User Users = 1;
+}
+
