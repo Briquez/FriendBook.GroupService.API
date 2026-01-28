@@ -26,7 +26,7 @@ namespace FriendBook.GroupService.Tests.IntegrationTests
 
             HttpResponseMessage httpResponseAccountStatusGroupView = await _httpClient.PostAsync($"{UrlController}/Create", requestNewAccountStatusGroupContent);
             var responseAccountStatusGroupView = await DeserializeHelper.TryDeserializeStandardResponse<ResponseAccountStatusGroupView>(httpResponseAccountStatusGroupView);
-
+            
             Assert.Multiple(() =>
             {
                 Assert.That(httpResponseAccountStatusGroupView.StatusCode, Is.EqualTo(HttpStatusCode.OK));

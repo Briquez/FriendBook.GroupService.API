@@ -34,7 +34,7 @@ namespace FriendBook.GroupService.API
             });
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.AddSwagger();
 
             var app = builder.Build();
 
